@@ -14,7 +14,7 @@ class BoardDrawer:
         pygame.init()
 
     def drawBoard (self, board):
-
+        pygame.event.get()
         self.screen.fill(Color(0, 0, 0))
 
         game_space = board.get_game_view()
