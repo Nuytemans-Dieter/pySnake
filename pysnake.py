@@ -1,6 +1,9 @@
 import game
 from visualizer.printboard import BoardPrinter
 from visualizer.board_drawer import BoardDrawer
+from moves import Moves
+from move_input.random_agent import RandomAgent
+from move_input.basic_agent import BasicAgent
 import time
 
 class pySnake:
@@ -13,6 +16,12 @@ class pySnake:
         isPlaying = True        # Keep track of the game state (playing/game over)
         
         board = game.Board()        # Initalize the board
+
+        # Choose gameplay input
+        #agent = RandomAgent()       # This agent selects a random possible move
+        agent = BasicAgent()        # This agent selects a move closer to the dot
+
+        # Choose a visualizer
         visualizer = BoardPrinter() # Select a visualiser (terminal)
         # visualizer = BoardDrawer()  # Select a visualiser (view screen)
 
@@ -26,7 +35,7 @@ class pySnake:
             isPlaying = not board.is_game_over()
 
             # Get the next move
-            next_move = None
+            next_move = agent.get_direction(board)
 
             # Perform the move
             board.move( next_move )

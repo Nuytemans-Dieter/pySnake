@@ -1,7 +1,7 @@
 # Board representation with utility functions
 
 from moves import Moves
-from pySnake_util.vector import addVectors2D
+from pySnake_util.vector import add_vectors_2D, distance_squared
 import numpy as np
 import queue
 import random
@@ -66,7 +66,7 @@ class Board:
         rand_body = random.randint(0, 3)
         offset, direction = self.RANDOM_BODY_START_UTIL[rand_body]
         #tail_location = (head_location[0] + offset[0], head_location[1] + offset[1])
-        tail_location = addVectors2D(head_location, offset)
+        tail_location = add_vectors_2D(head_location, offset)
 
         self.body_locations.put(tail_location)
         self.body_locations.put(head_location)
@@ -85,7 +85,7 @@ class Board:
         body_locations_list = self.get_body_locations_asarray()
 
         # Calculate the new head position
-        new_head_location = addVectors2D(body_locations_list[-1], self.DIRECTION_OFFSET_VECTOR[ self.current_direction ])
+        new_head_location = add_vectors_2D(body_locations_list[-1], self.DIRECTION_OFFSET_VECTOR[ self.current_direction ])
 
         # Do point hit detection
         # If hit: generate a random new one
@@ -93,6 +93,11 @@ class Board:
         (x, y) = new_head_location
         if x < 0 or x >= self.BOARD_DIM_X or y < 0 or y >= self.BOARD_DIM_Y:
             self.game_over = True
+            print("Hit a wall!")
+            return
+        elif body_locations_list.__contains__(new_head_location):
+            self.game_over = True
+            print("Hit the tail!")
             return
         elif x is self.dot_location[0] and y is self.dot_location[1]:
             self.score += self.SCORE_PER_DOT    # Add score
@@ -150,10 +155,13 @@ class Board:
 
 
     def get_game_data(self):
+        body_locations_list = self.get_body_locations_asarray()
         # Machine learning utility
         # Get distance (squared) to score dot
+        dist_to_dot = distance_squared(body_locations_list[-1], self.dot_location)
         # Get distance to own tail (straight distance, #steps) or very high number if not applicable
+        dist_to_tail = None
         # Get straight distance to the nearest wall
-        # Return all data
-        pass
+        dist_to_wall = None
+        return (dist_to_dot, dist_to_tail, dist_to_wall)
 
