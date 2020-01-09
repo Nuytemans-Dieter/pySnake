@@ -1,6 +1,6 @@
 import game
 from visualizer.printboard import BoardPrinter
-from visualizer.board_drawer import BoardDrawer
+from visualizer.pygame_drawer import BoardDrawer
 from moves import Moves
 from move_input.random_agent import RandomAgent
 from move_input.basic_agent import BasicAgent
@@ -22,8 +22,8 @@ class pySnake:
         agent = BasicAgent()        # This agent selects a move closer to the dot
 
         # Choose a visualizer
-        visualizer = BoardPrinter() # Select a visualiser (terminal)
-        # visualizer = BoardDrawer()  # Select a visualiser (view screen)
+        # visualizer = BoardPrinter() # Select a visualiser (terminal)
+        visualizer = BoardDrawer()  # Select a visualiser (view screen)
 
         while (isPlaying):
             start = time.time()
