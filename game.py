@@ -13,24 +13,29 @@ class Board:
     # -------------
 
     # Board size
-    BOARD_DIM_X = 40    # Board size width
-    BOARD_DIM_Y = 40    # Board size height
+    BOARD_DIM_X = 30    # Board size width
+    BOARD_DIM_Y = 30    # Board size height
 
     # Dificulty settings
-    POINTS_PER_DOT = 1  # Amount of score awarded per eaten dot
+    SCORE_PER_DOT = 1   # Amount of score awarded per eaten dot
     DOTS_PER_GROWTH = 2 # Amount of dots to be eaten before the snake grows
 
     RANDOM_BODY_START_UTIL = {  0: ((0, -1), Moves.DOWN), 
                                 1: ((1, 0),  Moves.LEFT),
                                 2: ((0, 1),  Moves.UP),
                                 3: ((-1, 0), Moves.RIGHT)}
+    DIRECTION_OFFSET_VECTOR = { Moves.DOWN: (0, 1),
+                                Moves.LEFT: (-1, 0),
+                                Moves.UP:   (0, -1),
+                                Moves.RIGHT:(1, 0)}
 
     # --------------
     # Game variables
     # --------------
 
+    game_over = False               # Keep track whether the game is over
     score = 0                       # The current score
-    snake_length = 2                # The length of the snake
+    dots_to_grow = DOTS_PER_GROWTH  # Counter to remember when the snake should grow (grows when this reaches 0)
     current_direction = Moves.UP    # The current direction in which the snake is moving
     
     # Location info
@@ -64,10 +69,28 @@ class Board:
         if direction is not None:
             self.current_direction = direction
 
-        # Move snake one square in the current direction (Filo queue)
+        body_locations_list = self.get_body_locations_asarray()
+
+        # Calculate the new head position
+        new_head_location = addVectors2D(body_locations_list[-1], self.DIRECTION_OFFSET_VECTOR[ self.current_direction ])
 
         # Do point hit detection
         # If hit: generate a random new one
+        # Do wall collision detection
+        (x, y) = new_head_location
+        if x < 0 or x >= self.BOARD_DIM_X or y < 0 or y >= self.BOARD_DIM_Y:
+            self.game_over = True
+            print("Wall collision detected!")
+            return
+        elif x is self.dot_location[0] and y is self.dot_location[1]:
+            self.score += self.SCORE_PER_DOT
+            self.dots_to_grow -= 1
+        
+        self.body_locations.put(new_head_location)  # Add the new head to the body list
+        if self.dots_to_grow is not 0:              # If it is NOT time to grow
+            self.body_locations.get()               # Remove the last part of the tail
+        
+
 
 
     def get_successors(self):
@@ -80,7 +103,7 @@ class Board:
 
 
     def is_game_over(self):
-        return False
+        return self.game_over
 
 
     def get_game_view(self):

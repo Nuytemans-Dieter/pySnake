@@ -26,9 +26,13 @@ class pySnake:
             isPlaying = not board.is_game_over()
 
             # Get the next move
+            next_move = None
 
             # Perform the move
+            board.move( next_move )
 
+            if not isPlaying:
+                break
 
             end = time.time()
             frame_time = end - start
