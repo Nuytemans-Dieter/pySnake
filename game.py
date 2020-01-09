@@ -18,7 +18,7 @@ class Board:
 
     # Dificulty settings
     SCORE_PER_DOT = 1   # Amount of score awarded per eaten dot
-    DOTS_PER_GROWTH = 2 # Amount of dots to be eaten before the snake grows
+    DOTS_PER_GROWTH = 1 # Amount of dots to be eaten before the snake grows
 
     RANDOM_BODY_START_UTIL =  {  
                                 0: ((0, -1), Moves.DOWN), 
@@ -107,9 +107,11 @@ class Board:
             rand_dot_y = random.randint(0, self.BOARD_DIM_Y - 1)
             self.dot_location = (rand_dot_x, rand_dot_y)
         
-        self.body_locations.put(new_head_location)  # Add the new head to the body list
-        if self.dots_to_grow is not 0:              # If it is NOT time to grow
-            self.body_locations.get()               # Remove the last part of the tail
+        self.body_locations.put(new_head_location)   # Add the new head to the body list
+        if self.dots_to_grow is 0:                   # If it is time to grow, reset the counter
+            self.dots_to_grow = self.DOTS_PER_GROWTH #Reset the dots_to_grow counter
+        else:
+            self.body_locations.get()                # Remove the last part of the tail
         
 
 
