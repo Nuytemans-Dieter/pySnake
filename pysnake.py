@@ -1,14 +1,16 @@
 import game
+import pygame
 from visualizer.printboard import BoardPrinter
 from visualizer.pygame_drawer import BoardDrawer
 from moves import Moves
 from move_input.random_agent import RandomAgent
 from move_input.basic_agent import BasicAgent
+from move_input.user_input import UserAgent
 import time
 
 class pySnake:
 
-    TIME_PER_FRAME = 0.5        # The time (in seconds) that one step should ideally take
+    TIME_PER_FRAME = 0.1        # The time (in seconds) that one step should ideally take
 
     def __init__(self):
         print("Initializing game...")
@@ -19,7 +21,8 @@ class pySnake:
 
         # Choose gameplay input
         #agent = RandomAgent()       # This agent selects a random possible move
-        agent = BasicAgent()        # This agent selects a move closer to the dot
+        #agent = BasicAgent()        # This agent selects a move closer to the dot
+        agent = UserAgent()         # This records and processes user input
 
         # Choose a visualizer
         # visualizer = BoardPrinter() # Select a visualiser (terminal)
