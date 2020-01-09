@@ -1,4 +1,3 @@
-
 class BoardPrinter:
     def drawBoard (self, board):
         gameSpace = board.get_game_view()
@@ -11,5 +10,5 @@ class BoardPrinter:
             gameView += "+"
             gameView += "\n"
 
+        gameView += "-----\n"
         print (gameView)
-        print("---")

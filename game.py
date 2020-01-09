@@ -1,6 +1,7 @@
 # Board representation with utility functions
 
 from moves import Moves
+from pySnake_util.vector import addVectors2D
 import numpy as np
 import queue
 import random
@@ -47,7 +48,8 @@ class Board:
         # Add second part of body at random spot around the head and initialize the direction
         rand_body = random.randint(0, 3)
         offset, direction = self.RANDOM_BODY_START_UTIL[rand_body]
-        tail_location = (head_location[0] + offset[0], head_location[1] + offset[1])
+        #tail_location = (head_location[0] + offset[0], head_location[1] + offset[1])
+        tail_location = addVectors2D(head_location, offset)
 
         self.body_locations.put(tail_location)
         self.body_locations.put(head_location)
@@ -82,7 +84,7 @@ class Board:
 
 
     def get_game_view(self):
-        view = [[" " for x in range(self.BOARD_DIM_X)] for y in range(self.BOARD_DIM_Y)]
+        view = [["_" for x in range(self.BOARD_DIM_X)] for y in range(self.BOARD_DIM_Y)]
         
         (x, y) = self.dot_location
         view[x][y] = "O"
