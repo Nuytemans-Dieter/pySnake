@@ -2,17 +2,17 @@ import game
 
 class BoardPrinter:
     def drawBoard (self, board):
-        gameSpace = board.get_game_view()
-        gameView = ""
+        game_space = board.get_game_view()
+        game_view = ""
 
-        gameView += (game.Board.BOARD_DIM_X + 2) * "+ " + "\n"
+        game_view += (game.Board.BOARD_DIM_X + 2) * "+ " + "\n"
 
-        for row in gameSpace:
-            gameView += "+ "
+        for row in game_space:
+            game_view += "+ "
             for value in row:
-                gameView += value + " "
-            gameView += "+"
-            gameView += "\n"
+                game_view += value + " "
+            game_view += "+"
+            game_view += "\n"
 
-        gameView += (game.Board.BOARD_DIM_X + 2) * "+ " + "\n"
-        print (gameView)
+        game_view += (game.Board.BOARD_DIM_X + 2) * "+ " + "\n"
+        print(game_view)
