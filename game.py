@@ -20,14 +20,26 @@ class Board:
     SCORE_PER_DOT = 1   # Amount of score awarded per eaten dot
     DOTS_PER_GROWTH = 2 # Amount of dots to be eaten before the snake grows
 
-    RANDOM_BODY_START_UTIL = {  0: ((0, -1), Moves.DOWN), 
+    RANDOM_BODY_START_UTIL =  {  
+                                0: ((0, -1), Moves.DOWN), 
                                 1: ((1, 0),  Moves.LEFT),
                                 2: ((0, 1),  Moves.UP),
-                                3: ((-1, 0), Moves.RIGHT)}
-    DIRECTION_OFFSET_VECTOR = { Moves.DOWN: (0, 1),
+                                3: ((-1, 0), Moves.RIGHT)
+                              }
+
+    DIRECTION_OFFSET_VECTOR = { 
+                                Moves.DOWN: (0, 1),
                                 Moves.LEFT: (-1, 0),
                                 Moves.UP:   (0, -1),
-                                Moves.RIGHT:(1, 0)}
+                                Moves.RIGHT:(1, 0)
+                              }
+
+    DIRECTION_OPPOSITES =     {
+                                Moves.DOWN:  Moves.UP,
+                                Moves.LEFT:  Moves.RIGHT,
+                                Moves.UP:    Moves.DOWN,
+                                Moves.RIGHT: Moves.LEFT
+                              }
 
     # --------------
     # Game variables
@@ -60,9 +72,10 @@ class Board:
         self.body_locations.put(head_location)
         self.current_direction = direction
 
-        print(self.body_locations)
-        print(self.get_body_locations_asarray())
-        print(self.body_locations)
+        # Generate a random starting point for the food dot
+        rand_dot_x = random.randint(0, self.BOARD_DIM_X - 1)
+        rand_dot_y = random.randint(0, self.BOARD_DIM_Y - 1)
+        self.dot_location = (rand_dot_x, rand_dot_y)
 
     
     def move(self, direction):
@@ -80,11 +93,14 @@ class Board:
         (x, y) = new_head_location
         if x < 0 or x >= self.BOARD_DIM_X or y < 0 or y >= self.BOARD_DIM_Y:
             self.game_over = True
-            print("Wall collision detected!")
             return
         elif x is self.dot_location[0] and y is self.dot_location[1]:
-            self.score += self.SCORE_PER_DOT
-            self.dots_to_grow -= 1
+            self.score += self.SCORE_PER_DOT    # Add score
+            self.dots_to_grow -= 1              # Subtract dots needed to grow
+            # Generate new random dot
+            rand_dot_x = random.randint(0, self.BOARD_DIM_X - 1)
+            rand_dot_y = random.randint(0, self.BOARD_DIM_Y - 1)
+            self.dot_location = (rand_dot_x, rand_dot_y)
         
         self.body_locations.put(new_head_location)  # Add the new head to the body list
         if self.dots_to_grow is not 0:              # If it is NOT time to grow
@@ -95,7 +111,9 @@ class Board:
 
     def get_successors(self):
         # Only get the possible moves: not in the direction of square n°2
-        return [Moves.UP, Moves.RIGHT, Moves.DOWN, Moves.LEFT]
+        moves = [Moves.UP, Moves.RIGHT, Moves.DOWN, Moves.LEFT]          # Get all possible directions
+        moves.remove(self.DIRECTION_OPPOSITES[self.current_direction])   # Remove the opposite direction and return
+        return moves
         
 
     def get_score(self):
@@ -110,10 +128,10 @@ class Board:
         view = [["_" for x in range(self.BOARD_DIM_X)] for y in range(self.BOARD_DIM_Y)]
         
         (x, y) = self.dot_location
-        view[x][y] = "O"
+        view[y][x] = "O"
 
         for location in self.get_body_locations_asarray():
-            view[location[0]][location[1]] = "X"
+            view[location[1]][location[0]] = "X"
 
         return view
 
