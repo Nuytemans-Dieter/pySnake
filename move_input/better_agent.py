@@ -26,7 +26,6 @@ class BetterAgent:
             new_distance = distance_squared(new_head_location, board.dot_location)
 
             distance_to_tail = self.get_distance_to_tail(board, body_locations)
-            print("Distance to tail:", distance_to_tail, "With move", move)
             if distance_to_tail is -1:
                 new_heuristic = new_distance
                 if new_heuristic < total_heuristic:
