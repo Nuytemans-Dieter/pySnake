@@ -5,6 +5,7 @@ from visualizer.pygame_drawer import BoardDrawer
 from moves import Moves
 from move_input.random_agent import RandomAgent
 from move_input.basic_agent import BasicAgent
+from move_input.better_agent import BetterAgent
 from move_input.user_input import UserAgent
 import time
 
@@ -22,7 +23,8 @@ class pySnake:
         # Choose gameplay input
         #agent = RandomAgent()       # This agent selects a random possible move
         #agent = BasicAgent()        # This agent selects a move closer to the dot
-        agent = UserAgent()         # This records and processes user input
+        agent = BetterAgent()       # This agent selects a move closer to the dot, but farther from its tail and the edge
+        #agent = UserAgent()         # This records and processes user input
 
         # Choose a visualizer
         # visualizer = BoardPrinter() # Select a visualiser (terminal)

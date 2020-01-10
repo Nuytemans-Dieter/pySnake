@@ -91,7 +91,7 @@ class Board:
         # If hit: generate a random new one
         # Do wall collision detection
         (x, y) = new_head_location
-        if x < 0 or x >= self.BOARD_DIM_X or y < 0 or y >= self.BOARD_DIM_Y:
+        if not self.is_location_within_bounds((x,y)):
             self.game_over = True
             print("Hit a wall!")
             return
@@ -114,6 +114,12 @@ class Board:
             self.body_locations.get()                # Remove the last part of the tail
         
 
+    def is_location_within_bounds(self, location):
+        (x, y) = location
+        if x < 0 or x >= self.BOARD_DIM_X or y < 0 or y >= self.BOARD_DIM_Y:
+            return False
+        else: 
+            return True
 
 
     def get_successors(self):
@@ -158,12 +164,39 @@ class Board:
 
     def get_game_data(self):
         body_locations_list = self.get_body_locations_asarray()
+        head_location = body_locations_list[-1]
         # Machine learning utility
         # Get distance (squared) to score dot
-        dist_to_dot = distance_squared(body_locations_list[-1], self.dot_location)
+        dist_to_dot = distance_squared(head_location, self.dot_location)
         # Get distance to own tail (straight distance, #steps) or very high number if not applicable
-        dist_to_tail = None
+        dist_to_tail = 0
+        looking_for_tail = True
+        next_position = head_location
+        while looking_for_tail:
+            # Tail distance increment
+            dist_to_tail += 1
+            # Increment position in direction
+            next_position = add_vectors_2D(next_position, self.DIRECTION_OFFSET_VECTOR[self.current_direction])
+            # Tail contains? looking_for_tail : false
+            if body_locations_list.__contains__(next_position):
+                looking_for_tail = False
+            # Hit the end of the board? looking_for_tail: false
+            if not self.is_location_within_bounds(next_position):
+                dist_to_tail = -1
+                looking_for_tail = False
+            
         # Get straight distance to the nearest wall
         dist_to_wall = None
+        if self.current_direction is Moves.UP:
+            dist_to_wall = head_location[1]
+        elif self.current_direction is Moves.RIGHT:
+            dist_to_wall = self.BOARD_DIM_X - 1 - head_location[0]
+        elif self.current_direction is Moves.DOWN:
+            dist_to_wall = self.BOARD_DIM_Y - 1 - head_location[1]
+        elif self.current_direction is Moves.LEFT:
+            dist_to_wall = head_location[0]
+        else:
+            dist_to_wall = 0
+
         return (dist_to_dot, dist_to_tail, dist_to_wall)
 
