@@ -27,7 +27,7 @@ class pySnake:
         agent = UserAgent()         # This records and processes user input
 
         # Choose a visualizer
-        # visualizer = BoardPrinter() # Select a visualiser (terminal)
+        #visualizer = BoardPrinter() # Select a visualiser (terminal)
         visualizer = BoardDrawer()  # Select a visualiser (view screen)
 
         while (isPlaying):

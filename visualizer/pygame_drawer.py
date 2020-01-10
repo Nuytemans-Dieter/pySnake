@@ -4,27 +4,45 @@ from game import Board
 
 class BoardDrawer:
 
-    SQUARE_SIZE = 20      # Sets the size of each block
+    SQUARE_SIZE = 17      # Sets the size of each block
+
+    # Colors
+    white = Color(255, 255, 255)
+    black = Color(0, 0, 0)
+    grey = Color(133,133,133)
+    yellow = Color(255, 255, 0)
 
     pygame.display.set_caption('pySnake')
-    screen = pygame.display.set_mode((SQUARE_SIZE * Board.BOARD_DIM_X, SQUARE_SIZE *Board.BOARD_DIM_Y))
-
+    screen = pygame.display.set_mode((SQUARE_SIZE * Board.BOARD_DIM_X, SQUARE_SIZE * Board.BOARD_DIM_Y + 3 * SQUARE_SIZE))
+    font = None
 
     def __init__(self):
         pygame.init()
+        #pygame.font.init()
+        self.font = myfont = pygame.font.SysFont('Comic Sans MS', self.SQUARE_SIZE)
 
     def drawBoard (self, board):
-        #pygame.event.get()
-        self.screen.fill(Color(0, 0, 0))
+        
+        # Create basic screen layout with a bottom box
+        self.screen.fill(self.black)
+        bottom_bar_rect = pygame.Rect(0,  Board.BOARD_DIM_Y * self.SQUARE_SIZE, self.SQUARE_SIZE * Board.BOARD_DIM_Y, 3 * self.SQUARE_SIZE)
+        pygame.draw.rect(self.screen, self.grey, bottom_bar_rect)
+        
+        # Draw score
+        score = "Score: " + str(board.score)
+        score_render = self.font.render(score, True, self.white)
+        score_x = self.SQUARE_SIZE * 3
+        score_y = (1 + Board.BOARD_DIM_Y) * self.SQUARE_SIZE
+        self.screen.blit(score_render, (score_x, score_y))
 
-        game_space = board.get_game_view()
+        # Draw the score dot
+        self.draw_square(board.dot_location, self.yellow)
 
+        # Draw the snake
         for location in board.get_body_locations_asarray():
-            white = Color(255, 255, 255)
-            self.draw_square(location, white)
+            self.draw_square(location, self.white)
 
-        yellow = Color(255, 255, 0)
-        self.draw_square(board.dot_location, yellow) 
+        # Perform a screen update
         pygame.display.update()
 
     def draw_square(self, location, color):
