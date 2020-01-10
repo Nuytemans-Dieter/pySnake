@@ -13,18 +13,22 @@ class BetterAgent:
             self.max_distance = Board.BOARD_DIM_Y
 
     def get_direction(self, board):
+        # Get snake body and head locations
         body_locations = board.get_body_locations_asarray()
         head_location = body_locations[-1]
-        possible_moves = board.get_successors()
 
+        # Get starting parameters
         (distance_to_dot, to_tail, to_wall) = board.get_game_data()
-        total_heuristic = self.calculate_heuristic((distance_to_dot, to_tail, to_wall))
+        total_heuristic = distance_to_dot
         new_move = None
         
-        for move in possible_moves:
+        # Iterate through all possible moves
+        for move in board.get_successors():
+            # Calculate the head position and new metric after moving
             new_head_location = add_vectors_2D(head_location, board.DIRECTION_OFFSET_VECTOR[move])
             new_distance = distance_squared(new_head_location, board.dot_location)
-
+            
+            # Handle game-losing moves
             distance_to_tail = self.get_distance_to_tail(board, body_locations)
             if distance_to_tail is -1:
                 new_heuristic = new_distance
@@ -40,20 +44,28 @@ class BetterAgent:
         return distance_to_dot + (self.max_distance - to_tail) + (self.max_distance - to_wall)
 
     def get_distance_to_tail(self, board, body_locations):
-        dist_to_tail = 0
+        # Initialize parameters
+        dist_to_tail = -1
         looking_for_tail = True
+
+        # Get head location
         head_pos = body_locations[-1]
         next_position = head_pos
+
+        # Iterate until a wall or tail is hit
         while looking_for_tail:
             # Tail distance increment
             dist_to_tail += 1
+            
             # Increment position in direction
             next_position = add_vectors_2D(next_position, board.DIRECTION_OFFSET_VECTOR[board.current_direction])
-            # Tail contains? looking_for_tail : false
+            
+            # Collision with tail? looking_for_tail : false
             if body_locations.__contains__(next_position):
                 looking_for_tail = False
                 return dist_to_tail
-            # Hit the end of the board? looking_for_tail: false
+
+            # Collision with the wall? looking_for_tail: false
             if not board.is_location_within_bounds(next_position):
                 dist_to_tail = -1
                 looking_for_tail = False
