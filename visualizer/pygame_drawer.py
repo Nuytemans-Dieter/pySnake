@@ -11,6 +11,8 @@ class BoardDrawer:
     black = Color(0, 0, 0)
     grey = Color(133,133,133)
     yellow = Color(255, 255, 0)
+    light_green = Color(0, 181, 57)
+    dark_green = Color(0, 128, 40)
 
     pygame.display.set_caption('pySnake')
     screen = pygame.display.set_mode((SQUARE_SIZE * Board.BOARD_DIM_X, SQUARE_SIZE * Board.BOARD_DIM_Y + 3 * SQUARE_SIZE))
@@ -38,9 +40,15 @@ class BoardDrawer:
         # Draw the score dot
         self.draw_square(board.dot_location, self.yellow)
 
-        # Draw the snake
-        for location in board.get_body_locations_asarray():
-            self.draw_square(location, self.white)
+        # Draw the snake (alternating light and dark green pattern: head is always dark green)
+        body_locations = board.get_body_locations_asarray()
+        body_counter = len(body_locations)
+        for location in body_locations:
+            if body_counter % 2 is 0:
+                self.draw_square(location, self.light_green)
+            else:
+                self.draw_square(location, self.dark_green)
+            body_counter -= 1
 
         # Perform a screen update
         pygame.display.update()
