@@ -39,6 +39,7 @@ class High_Scores:
 
     def read_highscores(self):
         file = open("highscores.txt", "r")
+        self.high_scores = []
         for score in file:
             if score is not None:
                 self.add_highscore(int(score))

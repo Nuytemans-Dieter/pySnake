@@ -1,6 +1,7 @@
 import pygame
 from pygame import Color
 from game import Board
+from high_scores import High_Scores
 
 class BoardDrawer:
 
@@ -16,14 +17,17 @@ class BoardDrawer:
 
     pygame.display.set_caption('pySnake')
     screen = pygame.display.set_mode((SQUARE_SIZE * Board.BOARD_DIM_X, SQUARE_SIZE * Board.BOARD_DIM_Y + 3 * SQUARE_SIZE))
-    font = None
+    
+    small_font = None
+    medium_font = None
     big_font = None
 
     def __init__(self):
         pygame.init()
         #pygame.font.init()
-        self.font = myfont = pygame.font.SysFont('Comic Sans MS', self.SQUARE_SIZE)
-        self.big_font = myfont = pygame.font.SysFont('Comic Sans MS', 3 * self.SQUARE_SIZE)
+        self.small_font =  pygame.font.SysFont('Comic Sans MS', self.SQUARE_SIZE)
+        self.medium_font = pygame.font.SysFont('Comic Sans MS', 2 * self.SQUARE_SIZE)
+        self.big_font =    pygame.font.SysFont('Comic Sans MS', 3 * self.SQUARE_SIZE)
 
     def drawBoard (self, board):
         
@@ -63,17 +67,36 @@ class BoardDrawer:
         text_rect = text_render.get_rect(center=((self.SQUARE_SIZE * board.BOARD_DIM_X) /2, self.SQUARE_SIZE * 5 ))
         self.screen.blit(text_render, text_rect)
 
+        # Display the player's score
         score = "Your score: " + str(board.score)
         score_render = self.big_font.render(score, True, self.white)
         score_rect = score_render.get_rect(center=((self.SQUARE_SIZE * board.BOARD_DIM_X) /2, self.SQUARE_SIZE * 12 ))
         self.screen.blit(score_render, score_rect)
+
+        # Display the high score title
+        hscore_title_render = self.medium_font.render("Highscores:", True, self.white)
+        hscore_title_rect = hscore_title_render.get_rect(center=((self.SQUARE_SIZE * board.BOARD_DIM_X) /2, self.SQUARE_SIZE * 16 ))
+        self.screen.blit(hscore_title_render, hscore_title_rect)
+
+        # Get the high scores
+        high_scores = High_Scores()
+        high_scores = high_scores.get_highscores()
+
+        # Display the high scores
+        num = 1
+        for h_score in high_scores:
+            text = "#" + str(num) + " - " + str(h_score)
+            score_render = self.medium_font.render(text, True, self.white)
+            location = ((self.SQUARE_SIZE * board.BOARD_DIM_X) /4, self.SQUARE_SIZE * (16 + num * 2))
+            self.screen.blit(score_render, location)
+            num += 1
 
         # Update the view
         pygame.display.update()
 
     
     def draw_text(self, location, color, text):
-        text_render = self.font.render(text, True, color)
+        text_render = self.small_font.render(text, True, color)
         x = location[0]
         y = location[1]
         self.screen.blit(text_render, (x, y))
