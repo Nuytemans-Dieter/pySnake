@@ -17,11 +17,13 @@ class BoardDrawer:
     pygame.display.set_caption('pySnake')
     screen = pygame.display.set_mode((SQUARE_SIZE * Board.BOARD_DIM_X, SQUARE_SIZE * Board.BOARD_DIM_Y + 3 * SQUARE_SIZE))
     font = None
+    big_font = None
 
     def __init__(self):
         pygame.init()
         #pygame.font.init()
         self.font = myfont = pygame.font.SysFont('Comic Sans MS', self.SQUARE_SIZE)
+        self.big_font = myfont = pygame.font.SysFont('Comic Sans MS', 3 * self.SQUARE_SIZE)
 
     def drawBoard (self, board):
         
@@ -32,10 +34,9 @@ class BoardDrawer:
         
         # Draw score
         score = "Score: " + str(board.score)
-        score_render = self.font.render(score, True, self.white)
         score_x = self.SQUARE_SIZE * 3
         score_y = (1 + Board.BOARD_DIM_Y) * self.SQUARE_SIZE
-        self.screen.blit(score_render, (score_x, score_y))
+        self.draw_text((score_x, score_y), self.white, score)
 
         # Draw the score dot
         self.draw_square(board.dot_location, self.yellow)
@@ -52,6 +53,30 @@ class BoardDrawer:
 
         # Perform a screen update
         pygame.display.update()
+
+    def show_end_screen(self, board):
+        # Create a black screen
+        self.screen.fill(self.black)
+
+        # Display the game title
+        text_render = self.big_font.render("pySnake", True, self.light_green)
+        text_rect = text_render.get_rect(center=((self.SQUARE_SIZE * board.BOARD_DIM_X) /2, self.SQUARE_SIZE * 5 ))
+        self.screen.blit(text_render, text_rect)
+
+        score = "Your score: " + str(board.score)
+        score_render = self.big_font.render(score, True, self.white)
+        score_rect = score_render.get_rect(center=((self.SQUARE_SIZE * board.BOARD_DIM_X) /2, self.SQUARE_SIZE * 12 ))
+        self.screen.blit(score_render, score_rect)
+
+        # Update the view
+        pygame.display.update()
+
+    
+    def draw_text(self, location, color, text):
+        text_render = self.font.render(text, True, color)
+        x = location[0]
+        y = location[1]
+        self.screen.blit(text_render, (x, y))
 
     def draw_square(self, location, color):
         x_loc = location[0]

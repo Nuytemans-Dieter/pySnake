@@ -54,6 +54,18 @@ class pySnake:
             sleep_time = self.TIME_PER_FRAME - frame_time
             if frame_time > 0 and sleep_time > 0:
                 time.sleep( sleep_time )
+        
+        is_watching_score = True
+        while is_watching_score:
+
+            visualizer.show_end_screen(board)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    is_watching_score = False
+
+            time.sleep( 0.05 )
+
             
 pySnake()
             
