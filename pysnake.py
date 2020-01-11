@@ -11,7 +11,7 @@ import time
 
 class pySnake:
 
-    TIME_PER_FRAME = 0.05        # The time (in seconds) that one step should ideally take
+    TIME_PER_FRAME = 0.01        # The time (in seconds) that one step should ideally take
 
     def __init__(self):
         print("Initializing game...")
@@ -23,8 +23,8 @@ class pySnake:
         # Choose gameplay input
         #agent = RandomAgent()       # This agent selects a random possible move
         #agent = BasicAgent()        # This agent selects a move closer to the dot
-        #agent = BetterAgent()       # This agent selects a move closer to the dot, but farther from its tail and the edge
-        agent = UserAgent()         # This records and processes user input
+        agent = BetterAgent()       # This agent selects a move closer to the dot, but farther from its tail and the edge
+        #agent = UserAgent()         # This records and processes user input
 
         # Choose a visualizer
         #visualizer = BoardPrinter() # Select a visualiser (terminal)
@@ -46,6 +46,7 @@ class pySnake:
             board.move( next_move )
 
             if not isPlaying:
+                print("Ended with score:", board.score)
                 break
 
             end = time.time()
