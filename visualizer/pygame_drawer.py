@@ -2,6 +2,7 @@ import pygame
 from pygame import Color
 from game import Board
 from high_scores import High_Scores
+from pySnake_util.vector import add_vectors_2D
 
 class BoardDrawer:
 
@@ -16,7 +17,7 @@ class BoardDrawer:
     dark_green = Color(0, 128, 40)
 
     pygame.display.set_caption('pySnake')
-    screen = pygame.display.set_mode((SQUARE_SIZE * Board.BOARD_DIM_X, SQUARE_SIZE * Board.BOARD_DIM_Y + 3 * SQUARE_SIZE))
+    screen = pygame.display.set_mode((SQUARE_SIZE * (Board.BOARD_DIM_X + 2), SQUARE_SIZE * Board.BOARD_DIM_Y + 4 * SQUARE_SIZE))
     
     small_font = None
     medium_font = None
@@ -31,24 +32,28 @@ class BoardDrawer:
 
     def drawBoard (self, board):
         
-        # Create basic screen layout with a bottom box
-        self.screen.fill(self.black)
-        bottom_bar_rect = pygame.Rect(0,  Board.BOARD_DIM_Y * self.SQUARE_SIZE, self.SQUARE_SIZE * Board.BOARD_DIM_Y, 3 * self.SQUARE_SIZE)
-        pygame.draw.rect(self.screen, self.grey, bottom_bar_rect)
+        # Create grey background
+        self.screen.fill(self.grey)
+        # Create black play area
+        play_room = (self.SQUARE_SIZE, self.SQUARE_SIZE, self.SQUARE_SIZE * Board.BOARD_DIM_X, self.SQUARE_SIZE * Board.BOARD_DIM_Y)
+        pygame.draw.rect(self.screen, self.black, play_room)
+        # bottom_bar_rect = pygame.Rect(0, Board.BOARD_DIM_Y * self.SQUARE_SIZE, self.SQUARE_SIZE * Board.BOARD_DIM_X, 3 * self.SQUARE_SIZE)
+        # pygame.draw.rect(self.screen, self.grey, bottom_bar_rect)
         
         # Draw score
         score = "Score: " + str(board.score)
-        score_x = self.SQUARE_SIZE * 3
-        score_y = (1 + Board.BOARD_DIM_Y) * self.SQUARE_SIZE
+        score_x = self.SQUARE_SIZE * 4
+        score_y = (2 + Board.BOARD_DIM_Y) * self.SQUARE_SIZE
         self.draw_text((score_x, score_y), self.white, score)
 
         # Draw the score dot
-        self.draw_square(board.dot_location, self.yellow)
+        self.draw_square(add_vectors_2D(board.dot_location, (1, 1)), self.yellow)
 
         # Draw the snake (alternating light and dark green pattern: head is always dark green)
         body_locations = board.get_body_locations_asarray()
         body_counter = len(body_locations)
         for location in body_locations:
+            location = add_vectors_2D(location, (1, 1))
             if body_counter % 2 is 0:
                 self.draw_square(location, self.light_green)
             else:
