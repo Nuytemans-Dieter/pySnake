@@ -69,18 +69,18 @@ class BoardDrawer:
 
         # Display the game title
         text_render = self.big_font.render("pySnake", True, self.light_green)
-        text_rect = text_render.get_rect(center=((self.SQUARE_SIZE * board.BOARD_DIM_X) /2, self.SQUARE_SIZE * 5 ))
+        text_rect = text_render.get_rect(center=((self.SQUARE_SIZE * (board.BOARD_DIM_X + 2)) /2, self.SQUARE_SIZE * 5 ))
         self.screen.blit(text_render, text_rect)
 
         # Display the player's score
         score = "Your score: " + str(board.score)
         score_render = self.big_font.render(score, True, self.white)
-        score_rect = score_render.get_rect(center=((self.SQUARE_SIZE * board.BOARD_DIM_X) /2, self.SQUARE_SIZE * 12 ))
+        score_rect = score_render.get_rect(center=((self.SQUARE_SIZE * (board.BOARD_DIM_X + 2)) /2, self.SQUARE_SIZE * 12 ))
         self.screen.blit(score_render, score_rect)
 
         # Display the high score title
         hscore_title_render = self.medium_font.render("Highscores:", True, self.white)
-        hscore_title_rect = hscore_title_render.get_rect(center=((self.SQUARE_SIZE * board.BOARD_DIM_X) /2, self.SQUARE_SIZE * 16 ))
+        hscore_title_rect = hscore_title_render.get_rect(center=((self.SQUARE_SIZE * (board.BOARD_DIM_X + 2)) /2, self.SQUARE_SIZE * 16 ))
         self.screen.blit(hscore_title_render, hscore_title_rect)
 
         # Get the high scores
@@ -92,7 +92,7 @@ class BoardDrawer:
         for h_score in high_scores:
             text = "#" + str(num) + " - " + str(h_score)
             score_render = self.medium_font.render(text, True, self.white)
-            location = ((self.SQUARE_SIZE * board.BOARD_DIM_X) /4, self.SQUARE_SIZE * (16 + num * 2))
+            location = ((self.SQUARE_SIZE * (board.BOARD_DIM_X + 2)) /4, self.SQUARE_SIZE * (16 + num * 2))
             self.screen.blit(score_render, location)
             num += 1
 
