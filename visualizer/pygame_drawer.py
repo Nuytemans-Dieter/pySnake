@@ -89,9 +89,17 @@ class BoardDrawer:
 
         # Display the high scores
         num = 1
+        is_highscore_marked = False
         for h_score in high_scores:
+            
+            if not is_highscore_marked and h_score is board.score:
+                color = self.yellow
+                is_highscore_marked = True
+            else:
+                color = self.white
+
             text = "#" + str(num) + " - " + str(h_score)
-            score_render = self.medium_font.render(text, True, self.white)
+            score_render = self.medium_font.render(text, True, color)
             location = ((self.SQUARE_SIZE * (board.BOARD_DIM_X + 2)) /4, self.SQUARE_SIZE * (16 + num * 2))
             self.screen.blit(score_render, location)
             num += 1
