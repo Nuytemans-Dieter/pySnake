@@ -8,13 +8,14 @@ class UserAgent:
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
+                                # Arrow keys               # Azerty keyboard
+                if event.key == pygame.K_LEFT  or event.key == pygame.K_a:
                     choice = Moves.LEFT
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     choice = Moves.RIGHT
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_UP    or event.key == pygame.K_w:
                     choice = Moves.UP
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_DOWN  or event.key == pygame.K_s:
                     choice = Moves.DOWN
 
         possible_moves = board.get_successors()
